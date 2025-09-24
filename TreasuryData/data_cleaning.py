@@ -24,12 +24,11 @@ slim = [{k: a.get(k) for k in KEEP} for a in data]
 
 for s in slim:                                                                              # offered ammount in B.
     s["offeringAmount"] = int(int(s["offeringAmount"])/1000000000)
-    
-for s in slim:                                                                              # offered ammount in B.
     s["auctionDate"] = s["auctionDate"][:10]
     
+bill_list = []    
+for s in slim:
+    if s["securityTerm"] == "4-Week":
+        bill_list.append(s)
 
-
-
-
-print(slim)
+print(bill_list)
