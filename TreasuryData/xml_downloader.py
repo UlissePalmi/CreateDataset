@@ -6,15 +6,13 @@ import os
 
 Security_type_list = {
     "Bill": ["4-Week", "8-Week", "13-Week", "17-Week", "26-Week", "52-Week"],
-    "Note": ["2-Year", "3-Year", "5-Year", "7-Year", "10-Year"], 
-    "Bond": ["20-Year", "30-Year"], 
-    "TIPS": ["5-Year", "10-Year", "30-Year"], 
-    "FRN": ["2-Year"]
+    #"Note": ["2-Year", "3-Year", "5-Year", "7-Year", "10-Year"], 
+    #"Bond": ["20-Year", "30-Year"], 
+    #"TIPS": ["5-Year", "10-Year", "30-Year"]
+    #"FRN": ["2-Year"]
     }
 year = 2025
 ROOT = "https://treasurydirect.gov/auctions/announcements-data-results/announcement-results-press-releases/"
-
-#DOES IT SCROLL ENOUGH???
 
 while year != 1996:
     for Security_type in Security_type_list.keys():
@@ -28,15 +26,18 @@ while year != 1996:
                 browser = p.chromium.launch(headless=False, slow_mo=300)
                 page = browser.new_page()
                 page.goto(ROOT, wait_until="domcontentloaded")
+                page.wait_for_timeout(300)
 
                 page.get_by_role("combobox").click()   # the year dropdown
-                page.get_by_role("listbox").get_by_role("option", name=f"{year}", exact=True).click()
-                page.wait_for_timeout(300)
+                page.keyboard.type(f"{year}")
+                page.get_by_role("option", name=f"{year}", exact=True).click()
+
+                
                 page.locator("#jqButtonYear").click() 
                 page.wait_for_timeout(300)
 
                 maturity_row = page.locator("#contenttablejqxGrid [role='row']").filter(has_text=Security_type).first
-                maturity_row.scroll_into_view_if_needed()                                                               # scrolls to the bills section    
+                maturity_row.scroll_into_view_if_needed()                                                                # scrolls to the bills section    
                 maturity_row.locator("[role='gridcell'][columnindex='0']").first.click()
                 page.wait_for_timeout(300)
 

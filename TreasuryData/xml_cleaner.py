@@ -3,9 +3,8 @@ import os
 import csv
 import re
 
-maturity = "4-week"
 destination = "UST_csv.csv"
-Folder = Path("td_xml") / maturity
+Folder = Path("td_xml")
 
 def data_type(file):
     letter = file[0]
@@ -43,14 +42,20 @@ def jsoncreater(content, data_type_value):
     return UST_Data
 
 UST_Data = []
-for file in os.listdir(Folder):
 
-    filepath = Folder / file
+for root, _, files in os.walk(Folder):
+    for name in files:
+        filepath = Path(root) / name
+        try:
+            with open(filepath, "r", encoding="utf-8") as f:
+                content = f.read()
+            dt = data_type(name)
+            UST_Data.append(jsoncreater(content, dt))
+        except Exception as e:
+            print(f"Skipped {filepath}: {e}")
+        else:
+            print(f"Success with {filepath}")
 
-    with open(filepath, 'r') as f:
-        content = f.read()
-        data_type_value = data_type(file)
-        UST_Data.append(jsoncreater(content, data_type_value))
 
 print("Finished cleaning the data")
 

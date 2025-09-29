@@ -17,9 +17,14 @@ with sync_playwright() as p:
     page.wait_for_timeout(300)
 
     page.get_by_role("combobox").click()   # the year dropdown
-    page.get_by_role("listbox").get_by_role("option", name="2017", exact=True).click()
+    page.keyboard.type("1997")
+    page.get_by_role("option", name="1997", exact=True).click()
+
+    page.locator("#jqButtonYear").click()
+
+    
     page.wait_for_timeout(300)
-    page.locator("#jqButtonYear").click() 
-    page.wait_for_timeout(300)
+
+    input("Enter to continue...")
 
     browser.close()
